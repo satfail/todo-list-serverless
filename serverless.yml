@@ -44,7 +44,7 @@ functions:
           method: get
           cors: true
   
-    translate:
+  translate:
     handler: todos/translate.translate
     events:
       - http:
