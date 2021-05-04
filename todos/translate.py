@@ -7,7 +7,7 @@ from todos import decimalencoder
 dynamodb = boto3.resource('dynamodb')
 
 
-def get(event, context):
+def translate(event, context):
     table = dynamodb.Table(os.environ['DYNAMODB_TABLE'])
 
     # fetch todo from the database
