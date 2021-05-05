@@ -35,7 +35,7 @@ def get(event, context):
     # The Lambda function calls the TranslateText operation and passes the 
     # review, the source language, and the target language to get the 
     # translated review. 
-    test = translate.translate_text(Text= result['Item'], SourceLanguageCode=source_language, TargetLanguageCode=target_language)
+    test = translate.translate_text(Text= result['Item']['text'], SourceLanguageCode=source_language, TargetLanguageCode=target_language)
     #result['Item']["text"] = test.get('TranslatedText')
     #logging.info("Translation output: " + str(result['Item']["text"]))
     #logging.info("Translation test: " + str(test))
