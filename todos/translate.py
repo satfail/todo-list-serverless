@@ -32,20 +32,16 @@ def get(event, context):
     else:
         target_language = 'auto'
         
-    # The Lambda function calls the TranslateText operation and passes the 
-    # review, the source language, and the target language to get the 
-    # translated review. 
+
     test = translate.translate_text(Text= result['Item']['text'], SourceLanguageCode=source_language, TargetLanguageCode=target_language)
-    #result['Item']["text"] = test.get('TranslatedText')
-    #logging.info("Translation output: " + str(result['Item']["text"]))
-    #logging.info("Translation test: " + str(test))
+    result['Item']["text"] = test.get('TranslatedText')
     logging.info("Translation getTranslated: " + str(test.get('TranslatedText')))
 
     
     # create a response
     response = {
         "statusCode": 200,
-        "body": json.dumps(test.get('TranslatedText'),
+        "body": json.dumps( result['Item'],
                            cls=decimalencoder.DecimalEncoder)
     }
 
