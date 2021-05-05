@@ -5,7 +5,9 @@ import os
 from todos import decimalencoder
 
 dynamodb = boto3.resource('dynamodb')
-
+translate = boto3.client('translate')
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 def get(event, context):
     table = dynamodb.Table(os.environ['DYNAMODB_TABLE'])
@@ -18,7 +20,6 @@ def get(event, context):
     )
 
     #translate
-    translate = boto3.client(service_name='translate', region_name='eu-west-1', use_ssl=True)
     source_language = "auto"
     
 
@@ -29,7 +30,18 @@ def get(event, context):
     else:
         target_language = 'auto'
 
-    result['Item']["text"] = translate.translate_text(Text=result['Item']["text"], SourceLanguageCode=source_language, TargetLanguageCode=target_language)
+        try:
+            # The Lambda function calls the TranslateText operation and passes the 
+            # review, the source language, and the target language to get the 
+            # translated review. 
+            test = translate.translate_text(Text='Prueba', SourceLanguageCode=source_language, TargetLanguageCode=target_language)
+            result['Item']["text"] = test.get('TranslatedText')
+            logging.info("Translation output: " + str(result['Item']["text"]))
+            logging.info("Translation test: " + str(test))
+            logging.info("Translation getTranslated: " + str(test.get('TranslatedText')))
+        except Exception as e:
+            logger.error(result)
+            raise Exception("[ErrorMessage]: " + str(e))
     
     # create a response
     response = {
